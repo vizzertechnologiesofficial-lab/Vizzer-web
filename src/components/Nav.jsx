@@ -41,7 +41,7 @@ export function ThemeToggle({ className = '' }) {
       type="button"
       onClick={toggle}
       aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'}
-      className={`relative grid h-9 w-9 place-items-center rounded-full text-foreground/80 transition-all ease-fluid-700 hover:bg-muted hover:text-foreground active:scale-95 ${className}`}
+      className={`relative grid h-10 w-10 place-items-center rounded-full md:h-9 md:w-9 text-foreground/80 transition-all ease-fluid-700 hover:bg-muted hover:text-foreground active:scale-95 ${className}`}
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
@@ -113,7 +113,7 @@ export default function Nav() {
         initial={{ y: -32, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1, ease: EASE, delay: 0.1 }}
-        className="fixed inset-x-0 top-0 z-50 flex justify-center px-4"
+        className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-[env(safe-area-inset-top)]"
       >
         <nav
           aria-label="Main"
@@ -168,7 +168,7 @@ export default function Nav() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? 'Close menu' : 'Open menu'}
-            className="relative ml-1 h-9 w-9 rounded-full transition-all ease-fluid-700 hover:bg-muted active:scale-95 md:hidden"
+            className="relative ml-1 h-10 w-10 rounded-full transition-all ease-fluid-700 hover:bg-muted active:scale-95 md:hidden"
           >
             <span
               className={`absolute left-1/2 top-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-foreground transition-all ease-fluid-700 ${
@@ -193,7 +193,7 @@ export default function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.4, ease: EASE } }}
             transition={{ duration: 0.5, ease: EASE }}
-            className="fixed inset-0 z-40 flex flex-col justify-between bg-background/90 px-6 pb-12 pt-32 backdrop-blur-3xl md:hidden"
+            className="fixed inset-0 z-40 flex flex-col justify-between gap-10 overflow-y-auto overscroll-contain bg-background/90 px-6 pb-[max(3rem,env(safe-area-inset-bottom))] pt-28 backdrop-blur-3xl md:hidden"
           >
             <ul className="flex flex-col gap-2">
               {nav.map((item, i) => (

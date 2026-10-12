@@ -27,8 +27,8 @@ export default function Tagline() {
 
   return (
     <section aria-label="What we believe" className="relative border-y border-border/60 bg-background">
-      <div className="mx-auto max-w-7xl px-4 py-32 sm:px-6 lg:px-8 lg:py-48">
-        <p ref={ref} className="max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl sm:leading-tight lg:text-6xl lg:leading-tight">
+      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-32 lg:px-8 lg:py-48">
+        <p ref={ref} className="max-w-4xl text-[2rem] font-semibold leading-tight tracking-tight sm:text-5xl sm:leading-tight lg:text-6xl lg:leading-tight">
           {LINES.map((l, li) => (
             <span key={li} className={li > 0 ? 'mt-4 block sm:mt-6' : 'block'}>
               {words

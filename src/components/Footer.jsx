@@ -53,8 +53,8 @@ export default function Footer() {
   return (
     <footer ref={ref} className="relative overflow-hidden border-t border-border bg-background">
       <div className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8 lg:pt-24">
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-12">
-          <div className="lg:col-span-4">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:gap-12 lg:grid-cols-12">
+          <div className="col-span-2 lg:col-span-4">
             <p className="max-w-sm text-2xl font-semibold leading-snug tracking-tight">
               Vizzer Technologies builds and runs software for everyday places.
             </p>
@@ -105,7 +105,7 @@ export default function Footer() {
             </ul>
           </nav>
 
-          <div className="lg:col-span-3">
+          <div className="col-span-2 sm:col-span-1 lg:col-span-3">
             <p className="text-sm text-muted-foreground">Reach us</p>
             <ul className="mt-4 flex flex-col gap-3">
               <li>
@@ -123,7 +123,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-2 border-t border-border py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-2 border-t border-border py-6 sm:mt-16 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Vizzer Technologies. All rights reserved.</p>
           <p>{site.domain}</p>
         </div>

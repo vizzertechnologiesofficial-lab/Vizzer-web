@@ -3,6 +3,8 @@ const withAlpha = (v) => `rgb(var(${v}) / <alpha-value>)`
 
 export default {
   darkMode: 'class',
+  // Hover styles only on devices that can hover, so taps on phones don't leave them stuck on
+  future: { hoverOnlyWhenSupported: true },
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {

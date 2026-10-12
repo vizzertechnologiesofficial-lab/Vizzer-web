@@ -124,7 +124,7 @@ export default function Capabilities() {
   const [open, setOpen] = useState('mobile')
   return (
     <section id="capabilities" aria-labelledby="capabilities-title" className="scroll-mt-24 bg-background">
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-24 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-32">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-20 sm:gap-12 sm:px-6 sm:py-24 lg:grid-cols-12 lg:px-8 lg:py-32">
         <motion.div
           variants={stagger(0.08)}
           initial="hidden"

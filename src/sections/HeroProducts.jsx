@@ -121,20 +121,20 @@ const Hero = forwardRef(function Hero({ currentId, onPick, theme }, ref) {
   const accent = productById[currentId].accent[theme]
 
   return (
-    <div ref={ref} className="flex min-h-[92svh] flex-col justify-center pb-16 pt-32 lg:min-h-screen lg:pb-24 lg:pt-40">
+    <div ref={ref} className="flex min-h-[88svh] flex-col justify-center pb-12 pt-28 sm:pb-16 sm:pt-32 lg:min-h-screen lg:pb-24 lg:pt-40">
       <div ref={wrapRef} className="relative">
         <motion.h1
           initial="hidden"
           animate="show"
           variants={stagger(0.09, 0.25)}
-          className="text-hero max-w-3xl text-5xl font-semibold leading-none tracking-tighter sm:text-6xl xl:text-7xl"
+          className="text-hero max-w-3xl text-[2.75rem] font-semibold leading-[1.08] tracking-tighter min-[400px]:text-5xl sm:text-6xl sm:leading-none xl:text-7xl"
         >
           {[
             <>Software for the {W(gate)},</>,
             <>the {W(table)}, the {W(home)}</>,
             <>and the {W(pitch)}.</>,
           ].map((content, i) => (
-            <span key={i} className="block overflow-hidden pb-4">
+            <span key={i} className="block overflow-hidden pb-2 sm:pb-4">
               <motion.span variants={line} className="block">
                 {content}
               </motion.span>
@@ -159,7 +159,7 @@ const Hero = forwardRef(function Hero({ currentId, onPick, theme }, ref) {
         initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         transition={{ duration: 1, ease: EASE, delay: 0.75 }}
-        className="mt-8 max-w-2xl text-lg text-muted-foreground sm:text-xl"
+        className="mt-6 max-w-2xl text-lg text-muted-foreground sm:mt-8 sm:text-xl"
       >
         Vizzer Technologies designs, builds and runs mobile apps and web platforms. Gater, Restro, Siyyana and Pitch It
         are ours, and we would like to build yours next.
@@ -169,7 +169,7 @@ const Hero = forwardRef(function Hero({ currentId, onPick, theme }, ref) {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: EASE, delay: 0.9 }}
-        className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4"
+        className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 sm:mt-10"
       >
         <button
           type="button"
@@ -192,7 +192,7 @@ const Hero = forwardRef(function Hero({ currentId, onPick, theme }, ref) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, ease: EASE, delay: 1.2 }}
-        className="mt-12 text-sm text-muted-foreground"
+        className="mt-8 text-sm text-muted-foreground sm:mt-12"
       >
         Android, iOS and web, from one team in India.
       </motion.p>
@@ -278,7 +278,7 @@ function Chapter({ p, theme, isDesktop }) {
       data-chapter={p.id}
       id={`product-${p.id}`}
       aria-labelledby={`${p.id}-title`}
-      className="flex flex-col justify-center py-24 lg:min-h-screen lg:py-32"
+      className="flex flex-col justify-center py-16 sm:py-24 lg:min-h-screen lg:py-32"
     >
       <motion.div variants={stagger(0.07)} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.25 }}>
         <motion.div variants={reveal} className="flex items-center gap-4">
@@ -292,7 +292,7 @@ function Chapter({ p, theme, isDesktop }) {
         <motion.h3
           variants={reveal}
           id={`${p.id}-title`}
-          className="mt-8 max-w-2xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl sm:leading-none"
+          className="mt-6 max-w-2xl text-[2rem] font-semibold leading-tight tracking-tight sm:mt-8 sm:text-5xl sm:leading-none"
         >
           {p.title}
         </motion.h3>
@@ -302,7 +302,7 @@ function Chapter({ p, theme, isDesktop }) {
         </motion.p>
 
         {!isDesktop && (
-          <motion.div variants={reveal} className="mt-12 flex justify-center">
+          <motion.div variants={reveal} className="mt-10 flex justify-center sm:mt-12">
             <Phone productId={p.id} width={276} playing={inView} glow={`${accent}66`} label={`${p.name} app preview`} />
           </motion.div>
         )}
@@ -367,6 +367,7 @@ export default function HeroProducts() {
   const { theme } = useTheme()
   const reduce = useReducedMotion()
   const isDesktop = useMediaQuery('(min-width: 1024px)')
+  const isSmall = useMediaQuery('(max-width: 639px)')
   const phoneWidth = usePhoneWidth()
   const { scrollTo } = useSmoothScroll()
 
@@ -416,7 +417,7 @@ export default function HeroProducts() {
               initial={{ opacity: 0, y: 64 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.1, ease: EASE, delay: 0.6 }}
-              className="flex flex-col items-center gap-6 pb-24"
+              className="flex flex-col items-center gap-6 pb-12 sm:pb-24"
             >
               <Phone
                 key="hero-phone"
@@ -429,7 +430,7 @@ export default function HeroProducts() {
                 label={`${products[heroIdx].name} app preview`}
               />
               <DemoTabs
-                compact
+                compact={isSmall}
                 currentId={products[heroIdx].id}
                 onPick={pickHero}
                 progress={{ key: cycle }}
@@ -439,7 +440,7 @@ export default function HeroProducts() {
             </motion.div>
           )}
 
-          <div id="products" className="pt-16 lg:pt-24">
+          <div id="products" className="scroll-mt-20 pt-8 sm:pt-16 lg:pt-24">
             <motion.div variants={stagger(0.08)} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.5 }}>
               <motion.h2 variants={reveal} className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
                 Four products, owned and run by our team.

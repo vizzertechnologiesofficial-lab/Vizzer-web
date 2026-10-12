@@ -7,6 +7,17 @@ import { EASE, reveal, stagger } from '../lib/motion'
 const topics = ['Mobile app', 'Web platform', 'Backend and hosting', 'Gater for my site', 'Something else']
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
+// Let a long address wrap after a dot or before the @ instead of mid-word on narrow phones
+const breakable = (email) => {
+  const [user, domain] = email.split('@')
+  return (
+    <>
+      {user.split('.').map((part, i) => (i ? <span key={i}>.<wbr />{part}</span> : part))}
+      <wbr />@{domain}
+    </>
+  )
+}
+
 function CopyEmail() {
   const [copied, setCopied] = useState(false)
   const copy = async () => {
@@ -109,7 +120,7 @@ export default function Contact() {
 
   return (
     <section id="contact" aria-labelledby="contact-title" className="scroll-mt-24 bg-background">
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 pb-24 pt-8 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:pb-32">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 pb-24 pt-8 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:pb-32">
         <motion.div
           variants={stagger(0.08)}
           initial="hidden"
@@ -132,8 +143,8 @@ export default function Contact() {
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm text-muted-foreground">Email</p>
-                <a href={`mailto:${site.email}`} className="block truncate text-base font-semibold hover:underline">
-                  {site.email}
+                <a href={`mailto:${site.email}`} className="block text-base font-semibold hover:underline">
+                  {breakable(site.email)}
                 </a>
               </div>
               <CopyEmail />
@@ -159,7 +170,7 @@ export default function Contact() {
           viewport={{ once: true, amount: 0.2 }}
           className="lg:col-span-7"
         >
-          <div className="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
+          <div className="rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-8">
             <AnimatePresence mode="wait" initial={false}>
               {sent ? (
                 <motion.div
