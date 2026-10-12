@@ -1,0 +1,162 @@
+@import '@fontsource-variable/manrope';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme tokens (RGB channels so Tailwind alpha modifiers work: bg-card/60 etc.) */
+@layer base {
+  :root {
+    --background: 250 250 247;
+    --foreground: 19 18 9;
+    --card: 255 255 255;
+    --muted: 240 239 234;
+    --muted-foreground: 98 96 86;
+    --border: 224 222 213;
+    --primary: 19 18 9;
+    --primary-foreground: 250 250 247;
+    --signal: 245 181 68;
+    --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .dark {
+    --background: 19 18 9;
+    --foreground: 242 241 236;
+    --card: 30 29 21;
+    --muted: 39 38 30;
+    --muted-foreground: 163 161 149;
+    --border: 54 52 42;
+    --primary: 245 181 68;
+    --primary-foreground: 19 18 9;
+    --signal: 245 181 68;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: 'ss01', 'cv01';
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: rgb(var(--signal) / 0.85);
+    color: #131209;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--signal));
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+}
+
+@layer components {
+  /* Hero heading gradient: left to right, on text only */
+  .text-hero {
+    background-image: linear-gradient(90deg, #000000 0%, #666666 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .dark .text-hero {
+    background-image: linear-gradient(90deg, #ffffff 0%, #9b9b9b 100%);
+  }
+
+  .glass {
+    @apply bg-background/70 backdrop-blur-xl;
+  }
+
+  .ease-fluid-700 {
+    transition-duration: 700ms;
+    transition-timing-function: var(--ease-fluid);
+  }
+
+  /* Subtle film grain, used once over the stage so flat colors don't look digital */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* Device frame is an illustration, so it gets its own true-to-life radius */
+  .device {
+    border-radius: 56px;
+  }
+  .device-screen {
+    border-radius: 46px;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes vz-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Hero headline words that switch the demo */
+.hero-word {
+  text-decoration-line: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 500ms var(--ease-fluid);
+}
+.hero-word:hover {
+  text-decoration-color: color-mix(in srgb, var(--u) 40%, transparent);
+}
+.hero-word:focus-visible {
+  outline-offset: 6px;
+}

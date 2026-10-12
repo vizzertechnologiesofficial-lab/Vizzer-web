@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Vizzer Technologies | Mobile apps, web products and SaaS</title>
+    <meta
+      name="description"
+      content="Vizzer Technologies designs, builds and runs mobile and web products, including Gater, Restro, Siyyana and Pitch It. Talk to our team about yours."
+    />
+    <link rel="canonical" href="https://vizzertechnologies.com/" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <meta name="theme-color" content="#131209" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Vizzer Technologies" />
+    <meta property="og:title" content="Vizzer Technologies | Mobile apps, web products and SaaS" />
+    <meta
+      property="og:description"
+      content="We design, build and run software for the gate, the table, the home and the pitch."
+    />
+    <meta property="og:url" content="https://vizzertechnologies.com/" />
+    <meta property="og:image" content="https://vizzertechnologies.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vizzer Technologies" />
+    <meta
+      name="twitter:description"
+      content="We design, build and run software for the gate, the table, the home and the pitch."
+    />
+    <meta name="twitter:image" content="https://vizzertechnologies.com/og-image.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Vizzer Technologies",
+        "url": "https://vizzertechnologies.com/",
+        "logo": "https://vizzertechnologies.com/apple-touch-icon.png",
+        "email": "vizzertechnologies.official@gmail.com",
+        "telephone": "+91 79941 13975",
+        "address": { "@type": "PostalAddress", "addressCountry": "IN" }
+      }
+    </script>
+
+    <!-- Apply the saved or system theme before first paint to avoid a flash -->
+    <script>
+      (function () {
+        var theme = null
+        try { theme = localStorage.getItem('vizzer-theme') } catch (e) {}
+        var forced = document.documentElement.getAttribute('data-theme')
+        if (theme !== 'light' && theme !== 'dark' && (forced === 'light' || forced === 'dark')) theme = forced
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        }
+        var root = document.documentElement
+        root.classList.toggle('dark', theme === 'dark')
+        root.style.colorScheme = theme
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p style="font-family: system-ui; padding: 24px">
+        Vizzer Technologies builds Gater, Restro, Siyyana and Pitch It. Email
+        vizzertechnologies.official@gmail.com or call +91 79941 13975.
+      </p>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
