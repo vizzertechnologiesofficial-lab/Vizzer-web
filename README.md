@@ -1,6 +1,8 @@
 # vizzertechnologies.com
 
-The company website for Vizzer Technologies. A single page React site (Vite + Tailwind CSS + Framer Motion) that introduces the company and its four products: Gater, Restro, Siyyana and Pitch It.
+The company website for Vizzer Technologies. A React site (Vite + Tailwind CSS + Framer Motion) with these pages: Home, About (`/about`), Products (`/products`), Technology & Solutions (`/technology`), Partnerships (`/partnerships`), Contact (`/contact`), Privacy Policy (`/privacy`) and Terms of Use (`/terms`). It introduces the company and its four products: Siyyana, Gater, Restro and Pitch IT.
+
+The wording follows the company's *Website Content & Copy-Paste Guide*.
 
 No backend. Everything is static and can be hosted anywhere.
 
@@ -17,17 +19,19 @@ Node 18 or newer.
 
 ## Edit the content
 
-Almost every word on the site lives in two files:
+Almost every word on the site lives in three files:
 
 | What | Where |
 | --- | --- |
-| Email, phone, social links | `src/data/site.js` |
-| Product names, copy, features, colors, store links | `src/data/products.js` |
-| "What we do" list | `src/sections/Capabilities.jsx` (the `items` array) |
-| Hero headline and intro | `src/sections/HeroProducts.jsx` (the `Hero` component) |
-| Tagline section | `src/sections/Tagline.jsx` (the `LINES` array) |
+| Page copy (headlines, About, Vision, Mission, Values, capabilities, partnerships, contact) | `src/data/content.js` |
+| Email, phone, optional partnerships/careers emails, address, social links, navigation, SEO titles and descriptions | `src/data/site.js` |
+| Product names, one-line summaries, audiences, features, colors, store links | `src/data/products.js` |
 
-**Store links.** When Restro, Siyyana and Pitch It are live under the Vizzer Play Store and App Store accounts, paste their URLs into `stores.play` and `stores.apple` in `src/data/products.js`. "Google Play" and "App Store" buttons appear automatically.
+**Optional contact details.** `partnershipsEmail`, `careersEmail`, `address` and `social.linkedin` in `src/data/site.js` are empty for now. Fill them in once confirmed and they appear on the Contact page (and Partnership/Careers enquiries are sent to those inboxes).
+
+**Contact form.** There is no backend. The form (Full Name, Business Email, Company, Enquiry Type, Message) opens the visitor's email app with the message filled in. Links like `/contact?enquiry=partnership` or `/contact?enquiry=product&product=gater` preselect the enquiry type.
+
+**Store links.** When Restro, Siyyana and Pitch IT are live under the Vizzer Play Store and App Store accounts, paste their URLs into `stores.play` and `stores.apple` in `src/data/products.js`. "Google Play" and "App Store" buttons appear automatically.
 
 **Social links.** Paste full profile URLs into `site.social` in `src/data/site.js`. Icons show up in the footer only for the ones you fill in.
 
@@ -55,17 +59,17 @@ Follows the conventions in the Gater `AGENTS.md`:
 4. Vercel shows the DNS records to add. In GoDaddy **DNS → Manage**, add exactly what Vercel shows (usually an `A` record for `@` and a `CNAME` for `www`).
 5. Do not touch the `MX` and `TXT` records that Google Workspace added. Company email keeps working.
 
-`vercel.json` already sends every route to `index.html`, so `/privacy` and the 404 page work on refresh. For Netlify, `public/_redirects` does the same job.
+`vercel.json` already sends every route to `index.html`, so `/about`, `/products` and the other pages (and the 404 page) work on refresh. For Netlify, `public/_redirects` does the same job.
 
 ## Structure
 
 ```
 src/
-  components/   Nav, Footer, Logo, Phone frame, product icons
+  components/   Nav, Footer, Logo, Phone frame, product icons, page header, buttons, CTA band
     demos/      Animated app screens for each product
-  sections/     Hero + products, Tagline, Capabilities, Contact
-  pages/        Home, Privacy, NotFound
-  data/         site.js, products.js   ← edit content here
-  lib/          motion constants, theme provider, smooth scroll
+  sections/     Home page sections: hero, about summary, products, what we do, approach
+  pages/        Home, About, Products, Technology, Partnerships, Contact, Privacy, Terms, NotFound
+  data/         content.js, site.js, products.js   ← edit content here
+  lib/          motion constants, theme provider, smooth scroll, page meta (SEO)
 public/         favicon, touch icon, share image, robots.txt, sitemap.xml
 ```

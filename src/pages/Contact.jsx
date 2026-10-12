@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { PiCopy, PiCheck, PiPhone, PiEnvelopeSimple, PiCheckCircle } from 'react-icons/pi'
-import { site } from '../data/site'
+import { useSearchParams } from 'react-router-dom'
+import { PiCopy, PiCheck, PiPhone, PiEnvelopeSimple, PiCheckCircle, PiHandshake, PiBriefcase, PiMapPin, PiLinkedinLogo } from 'react-icons/pi'
+import PageHeader from '../components/PageHeader'
+import { contact } from '../data/content'
+import { productById } from '../data/products'
+import { seo, site } from '../data/site'
+import { usePageMeta } from '../lib/meta'
 import { EASE, reveal, stagger } from '../lib/motion'
 
-const topics = ['Mobile app', 'Web platform', 'Backend and hosting', 'Gater for my site', 'Something else']
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 // Let a long address wrap after a dot or before the @ instead of mid-word on narrow phones
@@ -18,15 +22,15 @@ const breakable = (email) => {
   )
 }
 
-function CopyEmail() {
+function CopyEmail({ email }) {
   const [copied, setCopied] = useState(false)
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(site.email)
+      await navigator.clipboard.writeText(email)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (e) {
-      window.location.href = `mailto:${site.email}`
+      window.location.href = `mailto:${email}`
     }
   }
   return (
@@ -54,11 +58,12 @@ function CopyEmail() {
   )
 }
 
-function Field({ id, label, error, children }) {
+function Field({ id, label, optional, error, children }) {
   return (
     <div>
       <label htmlFor={id} className="text-sm font-semibold">
         {label}
+        {optional && <span className="font-normal text-muted-foreground"> (optional)</span>}
       </label>
       <div className="mt-2">{children}</div>
       <AnimatePresence>
@@ -84,8 +89,42 @@ const inputCls = (err) =>
     err ? 'border-red-500 focus:ring-red-500/30' : 'border-border hover:border-foreground/30 focus:border-foreground/40 focus:ring-signal/40'
   }`
 
+// Contact details. Optional ones only show once they are filled in src/data/site.js.
+function details() {
+  const list = [
+    { label: 'General enquiries', value: site.email, href: `mailto:${site.email}`, Icon: PiEnvelopeSimple, copy: true },
+    { label: 'Phone', value: site.phone, href: site.phoneHref, Icon: PiPhone },
+  ]
+  if (site.partnershipsEmail)
+    list.push({ label: 'Partnerships', value: site.partnershipsEmail, href: `mailto:${site.partnershipsEmail}`, Icon: PiHandshake, copy: true })
+  if (site.careersEmail)
+    list.push({ label: 'Careers', value: site.careersEmail, href: `mailto:${site.careersEmail}`, Icon: PiBriefcase, copy: true })
+  if (site.address) list.push({ label: 'Business address', value: site.address, Icon: PiMapPin })
+  if (site.social.linkedin) list.push({ label: 'LinkedIn', value: 'Vizzer Technologies', href: site.social.linkedin, Icon: PiLinkedinLogo, external: true })
+  return list
+}
+
+// Which inbox an enquiry type goes to
+const inboxFor = (type) => {
+  if (type === 'Partnership' && site.partnershipsEmail) return site.partnershipsEmail
+  if (type === 'Careers' && site.careersEmail) return site.careersEmail
+  return site.email
+}
+
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', topic: '', message: '' })
+  usePageMeta(seo.contact)
+  const [params] = useSearchParams()
+
+  // Links such as /contact?enquiry=partnership or /contact?enquiry=product&product=gater preselect the form
+  const initialType = contact.enquiryTypes.find((t) => t.toLowerCase() === params.get('enquiry')?.toLowerCase()) ?? ''
+  const product = productById[params.get('product')]
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    company: '',
+    type: initialType,
+    message: product ? `I would like to know more about ${product.name}.\n\n` : '',
+  })
   const [errors, setErrors] = useState({})
   const [sent, setSent] = useState(false)
 
@@ -96,10 +135,11 @@ export default function Contact() {
 
   const validate = () => {
     const er = {}
-    if (!form.name.trim()) er.name = 'Enter your name so we know who to reply to.'
-    if (!form.email.trim()) er.email = 'Enter your email address.'
+    if (!form.name.trim()) er.name = 'Enter your full name so we know who to reply to.'
+    if (!form.email.trim()) er.email = 'Enter your business email address.'
     else if (!EMAIL_RE.test(form.email.trim())) er.email = 'This email address looks incomplete. Check it and try again.'
-    if (form.message.trim().length < 10) er.message = 'Add a sentence or two about what you need.'
+    if (!form.type) er.type = 'Choose the type of enquiry.'
+    if (form.message.trim().length < 10) er.message = 'Add a sentence or two about your enquiry.'
     return er
   }
 
@@ -109,66 +149,56 @@ export default function Contact() {
     setErrors(er)
     if (Object.keys(er).length) {
       const first = Object.keys(er)[0]
-      document.getElementById(`c-${first}`)?.focus()
+      document.getElementById(first === 'type' ? 'c-type-0' : `c-${first}`)?.focus()
       return
     }
-    const subject = `${form.topic || 'Project enquiry'} from ${form.name.trim()}`
-    const body = `${form.message.trim()}\n\n${form.name.trim()}\n${form.email.trim()}`
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    const name = form.name.trim()
+    const company = form.company.trim()
+    const subject = `${form.type} enquiry from ${name}${company ? `, ${company}` : ''}`
+    const body = [form.message.trim(), '', name, company, form.email.trim()].filter((l, i) => i < 2 || l).join('\n')
+    window.location.href = `mailto:${inboxFor(form.type)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     setSent(true)
   }
 
   return (
-    <section id="contact" aria-labelledby="contact-title" className="scroll-mt-24 bg-background">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 pb-24 pt-8 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:pb-32">
-        <motion.div
-          variants={stagger(0.08)}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          className="lg:col-span-5"
-        >
-          <motion.h2 variants={reveal} id="contact-title" className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl sm:leading-none">
-            Tell us what you want to build.
-          </motion.h2>
-          <motion.p variants={reveal} className="mt-6 max-w-md text-lg text-muted-foreground">
-            Send a rough idea, a deadline or just a question. A person on our team replies, usually within a working
-            day.
-          </motion.p>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 gap-x-16 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+          <PageHeader eyebrow={contact.eyebrow} title={contact.headline} className="lg:pb-12">
+            <p>{contact.body}</p>
+          </PageHeader>
 
-          <motion.ul variants={reveal} className="mt-10 flex flex-col gap-3">
-            <li className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-muted">
-                <PiEnvelopeSimple size={18} aria-hidden="true" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm text-muted-foreground">Email</p>
-                <a href={`mailto:${site.email}`} className="block text-base font-semibold hover:underline">
-                  {breakable(site.email)}
-                </a>
-              </div>
-              <CopyEmail />
-            </li>
-            <li className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-muted">
-                <PiPhone size={18} aria-hidden="true" />
-              </span>
-              <div className="flex-1">
-                <p className="text-sm text-muted-foreground">Phone</p>
-                <a href={site.phoneHref} className="text-base font-semibold hover:underline">
-                  {site.phone}
-                </a>
-              </div>
-            </li>
+          <motion.ul variants={stagger(0.06)} initial="hidden" animate="show" className="flex flex-col gap-3 pb-12 lg:pb-32">
+            {details().map(({ label, value, href, Icon, copy, external }) => (
+              <motion.li key={label} variants={reveal} className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-muted">
+                  <Icon size={18} aria-hidden="true" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm text-muted-foreground">{label}</p>
+                  {href ? (
+                    <a
+                      href={href}
+                      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className="block text-base font-semibold hover:underline"
+                    >
+                      {copy ? breakable(value) : value}
+                    </a>
+                  ) : (
+                    <p className="text-base font-semibold">{value}</p>
+                  )}
+                </div>
+                {copy && <CopyEmail email={value} />}
+              </motion.li>
+            ))}
           </motion.ul>
-        </motion.div>
+        </div>
 
         <motion.div
-          variants={reveal}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          className="lg:col-span-7"
+          initial={{ opacity: 0, y: 48, filter: 'blur(12px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 1, ease: EASE, delay: 0.5 }}
+          className="pb-24 lg:col-span-7 lg:pb-32 lg:pt-48"
         >
           <div className="rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-8">
             <AnimatePresence mode="wait" initial={false}>
@@ -186,8 +216,8 @@ export default function Contact() {
                   <p className="mt-6 text-2xl font-semibold tracking-tight">Your email app should now be open.</p>
                   <p className="mt-3 max-w-md text-base text-muted-foreground">
                     Your message is filled in and ready to send. If nothing opened, write to us directly at{' '}
-                    <a className="font-semibold text-foreground underline" href={`mailto:${site.email}`}>
-                      {site.email}
+                    <a className="font-semibold text-foreground underline" href={`mailto:${inboxFor(form.type)}`}>
+                      {inboxFor(form.type)}
                     </a>
                     .
                   </p>
@@ -209,9 +239,10 @@ export default function Contact() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.4, ease: EASE }}
                   className="flex flex-col gap-6"
+                  aria-label="Contact form"
                 >
                   <div className="grid gap-6 sm:grid-cols-2">
-                    <Field id="c-name" label="Your name" error={errors.name}>
+                    <Field id="c-name" label="Full Name" error={errors.name}>
                       <input
                         id="c-name"
                         type="text"
@@ -224,7 +255,7 @@ export default function Contact() {
                         placeholder="Meera Thomas"
                       />
                     </Field>
-                    <Field id="c-email" label="Email" error={errors.email}>
+                    <Field id="c-email" label="Business Email" error={errors.email}>
                       <input
                         id="c-email"
                         type="email"
@@ -240,21 +271,37 @@ export default function Contact() {
                     </Field>
                   </div>
 
-                  <fieldset>
-                    <legend className="text-sm font-semibold">What do you need?</legend>
+                  <Field id="c-company" label="Company" optional>
+                    <input
+                      id="c-company"
+                      type="text"
+                      autoComplete="organization"
+                      value={form.company}
+                      onChange={set('company')}
+                      className={inputCls(false)}
+                      placeholder="Company name"
+                    />
+                  </Field>
+
+                  <fieldset aria-describedby={errors.type ? 'c-type-error' : undefined}>
+                    <legend className="text-sm font-semibold">Enquiry Type</legend>
                     <div className="mt-3 flex flex-wrap gap-2">
-                      {topics.map((t) => {
-                        const on = form.topic === t
+                      {contact.enquiryTypes.map((t, i) => {
+                        const on = form.type === t
                         return (
                           <button
                             key={t}
+                            id={`c-type-${i}`}
                             type="button"
                             aria-pressed={on}
-                            onClick={() => setForm((f) => ({ ...f, topic: on ? '' : t }))}
+                            onClick={() => {
+                              setForm((f) => ({ ...f, type: on ? '' : t }))
+                              if (errors.type) setErrors((er) => ({ ...er, type: undefined }))
+                            }}
                             className={`rounded-full border px-4 py-2 text-sm font-semibold transition-all ease-fluid-700 active:scale-[0.97] ${
                               on
                                 ? 'border-foreground bg-foreground text-background'
-                                : 'border-border text-foreground/80 hover:border-foreground/40 hover:text-foreground'
+                                : `${errors.type ? 'border-red-500' : 'border-border'} text-foreground/80 hover:border-foreground/40 hover:text-foreground`
                             }`}
                           >
                             {t}
@@ -262,6 +309,20 @@ export default function Contact() {
                         )
                       })}
                     </div>
+                    <AnimatePresence>
+                      {errors.type && (
+                        <motion.p
+                          id="c-type-error"
+                          initial={{ opacity: 0, y: -4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3, ease: EASE }}
+                          className="mt-2 text-sm text-red-600 dark:text-red-400"
+                        >
+                          {errors.type}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
                   </fieldset>
 
                   <Field id="c-message" label="Message" error={errors.message}>
@@ -273,7 +334,7 @@ export default function Contact() {
                       aria-invalid={!!errors.message}
                       aria-describedby={errors.message ? 'c-message-error' : undefined}
                       className={`${inputCls(errors.message)} resize-y`}
-                      placeholder="We run three clinics and want patients to book and pay for slots from their phone."
+                      placeholder="Tell us a little about what you have in mind."
                     />
                   </Field>
 
@@ -283,7 +344,7 @@ export default function Contact() {
                       type="submit"
                       className="rounded-full bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-sm transition-all ease-fluid-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.98]"
                     >
-                      Send by email
+                      Send Message
                     </button>
                   </div>
                 </motion.form>
@@ -292,6 +353,6 @@ export default function Contact() {
           </div>
         </motion.div>
       </div>
-    </section>
+    </div>
   )
 }

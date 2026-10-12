@@ -1,16 +1,12 @@
-import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Mark } from '../components/Logo'
 import { EASE } from '../lib/motion'
+import { seo } from '../data/site'
+import { usePageMeta } from '../lib/meta'
 
 export default function NotFound() {
-  useEffect(() => {
-    document.title = 'Page not found | Vizzer Technologies'
-    return () => {
-      document.title = 'Vizzer Technologies | Mobile apps, web products and SaaS'
-    }
-  }, [])
+  usePageMeta(seo.notFound)
 
   return (
     <section className="mx-auto flex min-h-screen max-w-3xl flex-col items-start justify-center px-4 py-32 sm:px-6">
@@ -35,7 +31,7 @@ export default function NotFound() {
         transition={{ duration: 0.9, ease: EASE, delay: 0.3 }}
         className="mt-6 max-w-xl text-lg text-muted-foreground"
       >
-        The link may be old or mistyped. Everything we make is on the home page.
+        The link may be old or mistyped. You can find everything we do from the home page.
       </motion.p>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9, ease: EASE, delay: 0.45 }}>
         <Link

@@ -1,33 +1,35 @@
-import { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import HeroProducts from '../sections/HeroProducts'
+import { motion } from 'framer-motion'
+import HomeHero from '../sections/HomeHero'
 import Tagline from '../sections/Tagline'
-import Capabilities from '../sections/Capabilities'
-import Contact from '../sections/Contact'
-import { useSmoothScroll } from '../lib/scroll'
+import ProductGrid from '../sections/ProductGrid'
+import WhatWeDo from '../sections/WhatWeDo'
+import Approach from '../sections/Approach'
+import CtaBand from '../components/CtaBand'
+import { ArrowLink } from '../components/Buttons'
+import { home } from '../data/content'
+import { seo } from '../data/site'
+import { usePageMeta } from '../lib/meta'
+import { reveal } from '../lib/motion'
 
 export default function Home() {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { scrollTo } = useSmoothScroll()
-
-  // Arriving from another page with a section to jump to
-  useEffect(() => {
-    const id = location.state?.scrollTo
-    if (!id) return undefined
-    const t = setTimeout(() => {
-      scrollTo(id)
-      navigate('.', { replace: true, state: null })
-    }, 120)
-    return () => clearTimeout(t)
-  }, [location.state, navigate, scrollTo])
+  usePageMeta(seo.home)
+  const { about, cta } = home
 
   return (
     <>
-      <HeroProducts />
-      <Tagline />
-      <Capabilities />
-      <Contact />
+      <HomeHero />
+      <Tagline lines={about.lead} eyebrow={about.eyebrow}>
+        <motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.5 }} className="mt-10 sm:mt-12">
+          <p className="max-w-2xl text-lg text-muted-foreground">{about.body}</p>
+          <ArrowLink to="/about" className="mt-8">
+            {about.link}
+          </ArrowLink>
+        </motion.div>
+      </Tagline>
+      <ProductGrid />
+      <WhatWeDo />
+      <Approach />
+      <CtaBand title={cta.headline} body={cta.body} button={cta.button} />
     </>
   )
 }
