@@ -1,6 +1,7 @@
 import pitchitIcon from '../assets/apps/pitchit-icon.png'
 import restroIcon from '../assets/apps/restro-icon.png'
 import siyyanaIcon from '../assets/apps/siyyana-icon.png'
+import gaterIcon from '../assets/apps/gater-icon.png'
 
 // Order follows the company content guide: Siyyana, Gater, Restro, Pitch IT.
 // `summary` is the one sentence shown on the home page; `audience` is who the product is for.
@@ -52,8 +53,8 @@ export const products = [
     platforms: ['Web app', 'Works on any phone'],
     fact: { value: '₹499', label: 'a month per site, after a 7 day free trial' },
     link: { href: 'https://www.gaterlogs.com/', label: 'Visit gaterlogs.com' },
-    icon: null,
-    tile: '#E7F3F0',
+    icon: gaterIcon,
+    tile: '#F8F3EF',
     accent: { light: '#137566', dark: '#4FCDB2' },
     stage: { light: '#E6F2EE', dark: '#0A1C19' },
   },

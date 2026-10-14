@@ -2,19 +2,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { PiCheckBold, PiShieldCheck, PiCaretLeft } from 'react-icons/pi'
 import { StatusBar, Tap, Typed, useTimeline, screenSwap, FakeQR } from './ui'
 import { EASE } from '../../lib/motion'
+import gaterGlyph from '../../assets/apps/gater-glyph.png'
 
 const TEAL = '#137566'
 const STEPS = [1900, 2700, 800, 1900, 2700]
 export const DURATION = STEPS.reduce((a, b) => a + b, 0)
-
-export function GaterGlyph({ size = 20, color = TEAL }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M3 21V5.5a1.5 1.5 0 0 1 3 0V21M18 21V5.5a1.5 1.5 0 0 1 3 0V21" />
-      <path d="M6 9h12M6 15h12M10 9v6M14 9v6" />
-    </svg>
-  )
-}
 
 const fields = [
   { label: 'Full name', value: 'Aisha Rahman' },
@@ -31,7 +23,7 @@ export default function GaterDemo({ playing = true, onComplete, loop = true }) {
       <StatusBar />
       <div className="flex items-center gap-2 px-6 pt-2">
         {step >= 1 ? <PiCaretLeft className="text-neutral-400" size={18} aria-hidden="true" /> : null}
-        <GaterGlyph />
+        <img src={gaterGlyph} alt="" width={20} height={20} />
         <span className="text-sm font-bold">Gater</span>
         <span className="ml-auto rounded-full bg-white px-3 py-1 text-xs font-semibold text-neutral-500 shadow-sm">Gate 2</span>
       </div>

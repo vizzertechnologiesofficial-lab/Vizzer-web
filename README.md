@@ -35,7 +35,7 @@ Almost every word on the site lives in three files:
 
 **Social links.** Paste full profile URLs into `site.social` in `src/data/site.js`. Icons show up in the footer only for the ones you fill in.
 
-**Logo.** The mark is drawn in `src/components/Logo.jsx`, `public/favicon.svg` and `public/apple-touch-icon.png`. Swap all three if you have an official logo. `public/og-image.png` is the picture shown when the link is shared on WhatsApp, LinkedIn or Instagram.
+**Logo.** The official mark lives in `src/assets/brand/vizzer-mark.png` (used by `src/components/Logo.jsx`), with `public/favicon.png`, `public/favicon.ico`, `public/apple-touch-icon.png` and `public/logo.png` made from the same artwork. The Gater icon is `src/assets/apps/gater-icon.png`. `public/og-image.png` is the picture shown when the link is shared on WhatsApp, LinkedIn or Instagram.
 
 ## The phone demos
 
